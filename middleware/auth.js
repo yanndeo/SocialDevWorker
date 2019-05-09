@@ -7,7 +7,7 @@ const config = require('config');
 module.exports = function(req, res, next){
     //Get token from header
    const token= req.header('x-auth-token');
-   
+
    if(!token){
        res.status(401).json({ msg:' No token , no authozited'})
    }else{
@@ -20,6 +20,8 @@ module.exports = function(req, res, next){
            next();
 
        }catch(err){
+           console.log('middleware_token_verify:', err.message);
+
            res.status(401).json({ msg: 'token is not valid'})
        }
     

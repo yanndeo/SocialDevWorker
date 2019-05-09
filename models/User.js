@@ -37,18 +37,16 @@ UserSchema.pre('save', async function (next) {
         next();
 
     } else {
+        
         try{
             const salt = await bcrypt.genSalt(10);
-
             user.password = await bcrypt.hash(user.password, salt);
-
             next();
+
         }catch(err){
             console.log('hash_pwd_error:', err.message);
             res.status(500).send('could not hash password ')
         }
-      
-
     }
 
 

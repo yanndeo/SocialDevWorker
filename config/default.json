@@ -1,0 +1,4 @@
+{
+    "mongoURI":"mongodb+srv://yanndeo:deo1234@devworker-wovin.mongodb.net/rsocial?retryWrites=true",
+    "jwtSecret" :"Social_dev_worker_secretmern"
+}

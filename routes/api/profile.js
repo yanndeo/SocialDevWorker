@@ -271,7 +271,92 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         }
        
     } catch (err) {
-        console.log('delete_profile', err.message);
+        console.log('delete_profile_experience', err.message);
+        res.status(500).send('Server Error')
+    }
+});
+
+
+
+
+
+
+
+// @route    PUT api/profile/education
+// @desc     Add Education into profile user
+// @access   Private
+router.put('/education', [ auth,
+    [
+        check('school', 'School is required').not().isEmpty(),
+        check('fieldofstudy', 'Fieldofstudy is required').not().isEmpty(),
+        check('degree', 'Degree is required').not().isEmpty(),
+        check('from', 'From is required').not().isEmpty(),
+
+    ],
+], async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
+    const { school, degree, fieldofstudy, from, to, current, description } = req.body;
+
+
+    try {
+          let profile = await Profile.findOne({ user: req.user.id });
+
+          let newEducationItem = {
+            school,
+            degree,
+            fieldofstudy,
+            from,
+            to,
+            current,
+            description
+          };
+
+        profile.education.unshift(newEducationItem); //le tableau education de notre ojbect profile
+
+          let profilUpdated = await profile.save();
+
+          res.status(200).json(profilUpdated);
+
+        } catch (err) {
+        console.log("add_education_profile_user", err.message);
+        res.status(500).send("Server Error");
+    }
+
+});
+
+
+
+// @route    DELETE api/profile/education/:edu_id
+// @desc     Delete Education from profile 
+// @access   Private
+router.delete('/education/:edu_id', auth, async (req, res) => {
+
+    try {
+        const profile = await Profile.findOne({ user: req.user.id });
+
+        let indexElement = profile.education.map(item => item.id).indexOf(req.params.edu_id);
+
+        if (indexElement >= 0) {
+
+            profile.education.splice(indexElement, 1);
+
+            console.log(indexElement);
+
+            await profile.save();
+
+            res.status(200).json(profile);
+            
+        } else {
+            return res.status(200).json({ msg: 'Education doesnt exist' });
+        }
+
+    } catch (err) {
+        console.log('delete_profile_education', err.message);
         res.status(500).send('Server Error')
     }
 });

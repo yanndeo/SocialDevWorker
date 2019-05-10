@@ -65,7 +65,8 @@ router.post('/', [auth,
         if (githubusername) profileFields.githubusername = githubusername;
     
         if(skills){
-            profileFields.skills = skills.split(',').map(skill => skill.trim());
+
+           profileFields.skills = skills.split(',').map(skill => skill.trim());
         }
 
         //Build social object
@@ -79,6 +80,7 @@ router.post('/', [auth,
         try{
 
             let profile = await Profile.findOne({ user: req.user.id });
+
             if(profile){
                 //UPDATE
                 profile = await Profile.findOneAndUpdate(
@@ -86,7 +88,7 @@ router.post('/', [auth,
                     {$set: profileFields},
                     {new: true });
               
-                return res.json(profile);
+                return res.status(200).json(profile);
 
             }else{
                 //CREATE 
@@ -98,6 +100,7 @@ router.post('/', [auth,
             }
 
         }catch(err){
+
             console.log('profile_user_save',err.message);
             res.status(500).send('Server Error')
         }
@@ -106,6 +109,55 @@ router.post('/', [auth,
 
         res.send('okay good');
 
+});
+
+
+
+
+// @route    GET api/profile
+// @desc     Get all profiles
+// @access   Prublic
+router.get('/', async (req, res) => {
+
+    try {
+
+        const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+        return res.status(200).json(profiles);
+
+        
+    } catch (error) {
+        console.log('get_profile_all', err.message);
+        res.status(500).send('Server Error')
+    }
+});
+
+
+
+// @route    GET api/profile/user/user_id
+// @desc     Get profile by user
+// @access   Prublic
+router.get('/user/:user_id', async (req, res) => {
+
+    try {
+
+        const profile = await Profile.find({user: req.params.user_id}).populate('user', ['name', 'avatar']);
+        
+        if (!profile) {
+            return res.status(400).json({ msg: "There is not profile for this user" });
+
+        }else{
+            return res.status(200).json(profile);
+
+        }
+
+    } catch (err) {
+        console.log('get_profile_by_user', err.message);
+        if(err.kind == 'ObjectId'){
+            return res.status(400).json({ msg: "There is not profile for this user.." });
+
+        }
+        res.status(500).send('Server Error')
+    }
 });
 
 

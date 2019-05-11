@@ -1,4 +1,6 @@
 {
     "mongoURI":"mongodb+srv://yanndeo:deo1234@devworker-wovin.mongodb.net/rsocial?retryWrites=true",
-    "jwtSecret" :"Social_dev_worker_secretmern"
+    "jwtSecret" :"Social_dev_worker_secretmern",
+    "githubClientID": "a01567044e7e2cf0cd66",
+    "githubSecret" : "38494308b36ad7f38209f1615b5a6871b3bfed1d"
 }

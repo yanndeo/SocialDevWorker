@@ -1,4 +1,5 @@
 import React ,{Fragment, useState} from 'react'
+import { Link } from 'react-router-dom'
 
 const Register = () => {
 
@@ -22,12 +23,48 @@ const Register = () => {
     };
 
 
-    const onSubmit = (e)=>{
+    const onSubmit = async(e)=>{
+
         e.preventDefault();
+        /**
+         * Check matching password
+         */
         if(password !== password2){
             console.log('password no correspondance');
         }else{
-            console.log(formData);
+            console.log('SUCCESS',formData);
+        // /**
+        //  * Create user Object
+        //  */
+        //     const newUser ={
+        //         name,
+        //         email,
+        //         password
+        //     }
+
+        // /**
+        //  * Async/await
+        //  * Define headers like postman
+        //  * Convert object javascript to object json (stringify)
+        //  * Launch request axios.
+        //  */
+        //     try{
+        //          const config= {
+        //             headers: {
+        //                 'Content-Type':'application/json'
+        //             }
+        //         }
+
+        //         const body  =  JSON.stringify(newUser);
+
+        //         let res =  await axios.post('/api/users', body, config);
+
+        //         console.log(res.data)
+
+
+        //     } catch (error) {
+        //         console.error(error.response.data)
+        //     }
         }
     }
 
@@ -82,7 +119,7 @@ const Register = () => {
             </form>
 
             <p className="my-1">
-                Already have an account? <a href="login.html">Sign In</a>
+                Already have an account? <Link to="/login">Sign In</Link>
             </p>
         </Fragment>
     )

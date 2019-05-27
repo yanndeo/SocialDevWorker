@@ -93,9 +93,9 @@ router.get('/:id', [auth], async (req, res) => {
 
      
     } catch (err) {
-        console.log("get_post", err.message);
+        console.log("get_a_post", err.message);
         if(err.king === 'ObjectId'){
-            res.status(404).send({ msg: 'Sorry post not found' });
+            return res.status(404).send({ msg: 'Sorry post not found' });
         }
         res.status(500).send("Server Error");
     }
@@ -125,7 +125,7 @@ router.delete('/:id', [auth], async (req, res) => {
 
             } else {
                 await post.remove();
-                res.status(200).json({ msg: 'Post removed ' });
+                return res.status(200).json({ msg: 'Post removed ' });
 
             }
         }
@@ -224,7 +224,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
     } catch (err) {
         console.log("unlike_post", err.message);
         if (err.king === "ObjectId") {
-            res.status(404).send({ msg: "Sorry post not found" });
+            return res.status(404).send({ msg: "Sorry post not found" });
         }
         res.status(500).send("Server Error");
     }
@@ -319,7 +319,7 @@ router.delete('/comment/:post_id/:comment_id',[auth], async(req, res)=>{
         } else {
 
             /**
-             * Pull out comment
+             * Pull out comment (extraction)
              */
             const comment = post.comments.find(comment => comment.id.toString() === req.params.comment_id);
 

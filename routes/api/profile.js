@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const { check, validationResult } = require("express-validator/check");
-
+const config = require('config');
+const request = require('request');
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
@@ -56,6 +57,7 @@ router.post('/', [auth,
 
         //Build profile objet
         let profileFields = {};
+
         profileFields.user = req.user.id;
         if (company) profileFields.company = company;
         if (website) profileFields.website = website;
@@ -65,8 +67,7 @@ router.post('/', [auth,
         if (githubusername) profileFields.githubusername = githubusername;
     
         if(skills){
-
-           profileFields.skills = skills.split(',').map(skill => skill.trim());
+           profileFields.skills = skills.split(',').map(skill => skill.trim()); //slpit ma chaine de carac via un separateur , renvoie un [] .. ensuite parcours chaque item en suppr les espaces.
         }
 
         //Build social object
@@ -84,15 +85,15 @@ router.post('/', [auth,
             if(profile){
                 //UPDATE
                 profile = await Profile.findOneAndUpdate(
-                    {user: req.user.id},
-                    {$set: profileFields},
-                    {new: true });
+                                         {user: req.user.id},
+                                         {$set: profileFields},
+                                         {new: true });  //??
               
                 return res.status(200).json(profile);
 
             }else{
                 //CREATE 
-                profile = new Profile(profileFields);
+                profile = new Profile(profileFields); //new Schema({objet})
                 
                 await profile.save();
                 return res.json(profile);
@@ -116,7 +117,7 @@ router.post('/', [auth,
 
 // @route    GET api/profile
 // @desc     Get all profiles
-// @access   Prublic
+// @access   Public
 router.get('/', async (req, res) => {
 
     try {
@@ -135,7 +136,7 @@ router.get('/', async (req, res) => {
 
 // @route    GET api/profile/user/user_id
 // @desc     Get profile by user
-// @access   Prublic
+// @access   Public
 router.get('/user/:user_id', async (req, res) => {
 
     try {
@@ -173,7 +174,7 @@ router.delete('/', auth , async (req, res) => {
 
     try {
 
-        //@todo --remove users post 
+        //@ --remove users post 
 
         //Remove profile
       let profile= await Profile.findOneAndRemove({ user: req.user.id})
@@ -217,7 +218,6 @@ router.put('/experience', [ auth ,
 
     const { title, company, location, from, to, current, description} = req.body;
 
-
     try {
         
         let profile = await Profile.findOne({ user: req.user.id });
@@ -232,7 +232,7 @@ router.put('/experience', [ auth ,
             description
         };
 
-        profile.experience.unshift(newExperience); //le tableau experience de notre oject profile
+        profile.experience.unshift(newExperience); //le tableau experience de notre object profile
 
         let profilUpdated =  await profile.save();
 
@@ -244,6 +244,10 @@ router.put('/experience', [ auth ,
     }
 
 });
+
+
+
+
 
 
 
@@ -260,11 +264,10 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         let indexElement = profile.experience.map(item => item.id).indexOf(req.params.exp_id);
         
         if(indexElement >= 0) {
-
             profile.experience.splice(indexElement, 1);
-            console.log(indexElement);
             await profile.save();
             res.status(200).json(profile);
+            
         }else{
             return res.status(200).json({ msg: 'Experience doesnt exist' });
 
@@ -340,7 +343,7 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
         const profile = await Profile.findOne({ user: req.user.id });
 
         let indexElement = profile.education.map(item => item.id).indexOf(req.params.edu_id);
-
+                                            //[_id, _id,_id ]
         if (indexElement >= 0) {
 
             profile.education.splice(indexElement, 1);
@@ -377,7 +380,7 @@ router.get('/github/:username', (req, res) => {
 
         const options = {
             uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5&
-          sort=created:asc&client_id=${config.get('githubClientID')}&client_secret=${config.get('githubSecret')}`,
+            sort=created:asc&client_id=${config.get('githubClientID')}&client_secret=${config.get('githubSecret')}`,
             method: 'GET',
             headers: { 'user-agent': 'node.js' }
         };
@@ -393,7 +396,7 @@ router.get('/github/:username', (req, res) => {
 
         });
     } catch (err) {
-        console.log("add_education_profile_user", err.message);
+        console.log("get_github_profile_user", err.message);
         res.status(500).send("Server Error");
     }
 

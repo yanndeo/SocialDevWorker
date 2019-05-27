@@ -26,7 +26,6 @@ async(req, res) => {
     }
 
     const { name, password,email} = req.body;
-   // const email = req.body.email.toLowerCase();
 
     try{
         //check if user exist already

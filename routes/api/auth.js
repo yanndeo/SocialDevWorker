@@ -52,17 +52,13 @@ router.post('/', [
             let user = await User.findOne({ email });
 
                 if (!user) {
-                    return res
-                        .status(400)
-                        .json({ errors: [{ msg: 'Invalid credentials' }] });
+                    return res.status(400).json({ errors: [{ msg: 'Invalid credentials' }] });
                 }
 
             let isMatch = await bcrypt.compare(password, user.password);
             
                 if(!isMatch){
-                    return res
-                        .status(400)
-                        .json({ errors: [{ msg: 'Invalid credentials' }] });
+                    return resstatus(400).json({ errors: [{ msg: 'Invalid credentials' }] });
                     
                 }
 
@@ -76,11 +72,8 @@ router.post('/', [
                 jwt.sign(payload, config.get("jwtSecret"), { expiresIn: 360000 }, (err, token)=>{
                     if (err) throw err;
                     res.status(201).json({ token })
-
                 });
 
-
-            
 
         } catch (err) {
             console.log('login_user_error:', err.message);

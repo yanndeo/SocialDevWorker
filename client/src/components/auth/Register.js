@@ -1,7 +1,16 @@
 import React ,{Fragment, useState} from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const Register = () => {
+//Action :_xxYYYY
+import { _setAlert } from "../../actions/alert";
+import { _register } from '../../actions/auth';
+
+
+
+
+const Register = ({ _setAlert, _register}) => {
 
     //Definition du state : Hook[state, setState ] =  useSate(initialize)
     const [formData, setFormData] = useState({
@@ -9,15 +18,16 @@ const Register = () => {
         email: '',
         password: '',
         password2: ''
-    })
+    });
 
 
-
+  // const { name, email, password, password2 } = this.state;
     const { name, email, password, password2 } = formData;
-   // const { name, email, password, password2 } = this.state;
+ 
 
 
     const onChange = (e)=>{
+        
         setFormData({ ...formData, [e.target.name]: e.target.value })
         //setState({ x : newValue})
     };
@@ -26,45 +36,14 @@ const Register = () => {
     const onSubmit = async(e)=>{
 
         e.preventDefault();
-        /**
-         * Check matching password
-         */
+       
+        //Check matching password
         if(password !== password2){
-            console.log('password no correspondance');
+            _setAlert('password no correspondance', 'danger');
         }else{
+            _register(name, email, password)
             console.log('SUCCESS',formData);
-        // /**
-        //  * Create user Object
-        //  */
-        //     const newUser ={
-        //         name,
-        //         email,
-        //         password
-        //     }
 
-        // /**
-        //  * Async/await
-        //  * Define headers like postman
-        //  * Convert object javascript to object json (stringify)
-        //  * Launch request axios.
-        //  */
-        //     try{
-        //          const config= {
-        //             headers: {
-        //                 'Content-Type':'application/json'
-        //             }
-        //         }
-
-        //         const body  =  JSON.stringify(newUser);
-
-        //         let res =  await axios.post('/api/users', body, config);
-
-        //         console.log(res.data)
-
-
-        //     } catch (error) {
-        //         console.error(error.response.data)
-        //     }
         }
     }
 
@@ -74,7 +53,7 @@ const Register = () => {
             <h1 className="large text-primary">Sign Up</h1>
             <p className="lead"><i className="fas fa-user"></i> Create Your Account</p>
 
-            <form className="form" onSubmit = { e=> onSubmit(e) } >
+            <form className="form" onSubmit = { e=> onSubmit(e) } noValidate >
                 <div className="form-group">
                     <input 
                         type="text" 
@@ -122,7 +101,12 @@ const Register = () => {
                 Already have an account? <Link to="/login">Sign In</Link>
             </p>
         </Fragment>
-    )
+    );
+};
+
+ Register.propTypes = {
+    _setAlert : PropTypes.func.isRequired,
+    _register: PropTypes.func.isRequired,
 }
 
-export default Register
+export default connect(null, { _setAlert, _register}) (Register)

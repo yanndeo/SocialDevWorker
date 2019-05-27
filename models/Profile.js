@@ -89,6 +89,7 @@ const ProfileSchema = new mongoose.Schema({
         }
     ],
     social: {
+
         youtube: {
             type: String
         },
@@ -104,6 +105,7 @@ const ProfileSchema = new mongoose.Schema({
         instagram: {
             type: String
         }
+        
     },
     date: {
         type: Date,

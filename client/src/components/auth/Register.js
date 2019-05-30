@@ -1,5 +1,5 @@
 import React ,{Fragment, useState} from 'react'
-import { Link } from 'react-router-dom'
+import { Link ,Redirect} from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -10,7 +10,7 @@ import { _register } from '../../actions/auth';
 
 
 
-const Register = ({ _setAlert, _register}) => {
+const Register = ({ _setAlert, _register, isAuthentificated}) => {
 
     //Definition du state : Hook[state, setState ] =  useSate(initialize)
     const [formData, setFormData] = useState({
@@ -45,6 +45,10 @@ const Register = ({ _setAlert, _register}) => {
             console.log('SUCCESS',formData);
 
         }
+    };
+
+    if (isAuthentificated){
+        return <Redirect to="/dashboard" />;
     }
 
 
@@ -104,9 +108,15 @@ const Register = ({ _setAlert, _register}) => {
     );
 };
 
+
  Register.propTypes = {
     _setAlert : PropTypes.func.isRequired,
     _register: PropTypes.func.isRequired,
+     isAuthentificated: PropTypes.bool,
 }
 
-export default connect(null, { _setAlert, _register}) (Register)
+
+const mapStateToProps = state => ({
+    isAuthentificated: state.auth.isAuthentificated
+});
+export default connect(mapStateToProps, { _setAlert, _register}) (Register)

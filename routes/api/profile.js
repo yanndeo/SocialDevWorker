@@ -20,7 +20,7 @@ router.get('/me', auth, async (req, res) => {
       let profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name', 'avatar']);
 
       if(!profile) {
-          return res.status(400).json({ msg: 'There is not profile for this user' })
+          return res.status(404).json({ msg: 'There is not profile for this user' })
       }else{
           return res.status(200).json({ profile })
 
@@ -49,11 +49,13 @@ router.post('/', [auth,
 ], async (req, res) => {
 
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
+        console.log('validation_error', errors.array())
         return res.status(422).json({ errors: errors.array() });
     }
 
-    const { company,website,location,bio, status, githubusername,skills, youtube, facebook, twitter, instagram,linkedin } = req.body;
+    const { company, website, location, bio, status, githubusername,skills, youtube, facebook, twitter, instagram,linkedin } = req.body;
 
         //Build profile objet
         let profileFields = {};
@@ -134,6 +136,9 @@ router.get('/', async (req, res) => {
 
 
 
+
+
+
 // @route    GET api/profile/user/user_id
 // @desc     Get profile by user
 // @access   Public
@@ -195,6 +200,11 @@ router.delete('/', auth , async (req, res) => {
         res.status(500).send('Server Error')
     }
 });
+
+
+
+
+
 
 
 
@@ -331,6 +341,10 @@ router.put('/education', [ auth,
     }
 
 });
+
+
+
+
 
 
 

@@ -41,9 +41,11 @@ const Landing = ({ isAuthentificated }) => {
 
 
 Landing.propTypes = {
+  isAuthentificated : PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   isAuthentificated: state.auth.isAuthentificated
 });
+
 export default connect(mapStateToProps, {})(Landing);

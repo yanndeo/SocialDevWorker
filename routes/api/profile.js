@@ -61,13 +61,18 @@ router.post('/', [auth,
         let profileFields = {};
 
         profileFields.user = req.user.id;
-        if (company) profileFields.company = company;
-        if (website) profileFields.website = website;
-        if (location) profileFields.location = location;
-        if (bio) profileFields.bio = bio;
+        //if (company) profileFields.company = company;
+          company ? profileFields.company = company : profileFields.company = null;
+        //if (website) profileFields.website = website;
+          website ? profileFields.website = website : profileFields.website = null;
+        //if (location) profileFields.location = location;
+          location ? profileFields.location = location : profileFields.location = null;
+        //if (bio) profileFields.bio = bio;
+          bio ? profileFields.bio = location : profileFields.bio = null;
         if (status) profileFields.status = status;
-        if (githubusername) profileFields.githubusername = githubusername;
-    
+        //if (githubusername) profileFields.githubusername = githubusername;
+         githubusername ? profileFields.githubusername = githubusername : profileFields.githubusername = null;
+
         if(skills){
            profileFields.skills = skills.split(',').map(skill => skill.trim()); //slpit ma chaine de carac via un separateur , renvoie un [] .. ensuite parcours chaque item en suppr les espaces.
         }
@@ -103,7 +108,6 @@ router.post('/', [auth,
             }
 
         }catch(err){
-
             console.log('profile_user_save',err.message);
             res.status(500).send('Server Error')
         }

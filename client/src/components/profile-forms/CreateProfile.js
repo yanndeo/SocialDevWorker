@@ -1,7 +1,7 @@
 import React ,{useState, Fragment} from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom"; //withRouter give me history 
 //Actions
 import { _createProfile } from '../../actions/profile';
 
@@ -25,7 +25,7 @@ const CreateProfile = ({ _createProfile, history }) => {
     });
 
     //Show or display social fields inputs
-    const [ displaySocialInputs , toggleSocialInputs] = useState(false)
+    const [ displaySocialInputs , toggleSocialInputs ] = useState(false)
 
 
     const { company, website,location, status, skills,githubusername, bio, twitter,facebook,linkedin,youtube,instagram } = formData ;
@@ -60,8 +60,8 @@ const CreateProfile = ({ _createProfile, history }) => {
             <select
               name="status"
               value={status}
-              onChange={e => onChange(e)}
-            >
+              onChange={e => onChange(e)} >
+
               <option value="0">* Select Professional Status</option>
               <option value="Developer">Developer</option>
               <option value="Junior Developer">Junior Developer</option>
@@ -239,8 +239,38 @@ const CreateProfile = ({ _createProfile, history }) => {
 
 //PropType
 CreateProfile.propTypes = {
-    _createProfile: PropTypes.func.isRequired,
+    _createProfile: PropTypes.func.isRequired,  //action redux
 }
 
 export default connect(null, { _createProfile})(withRouter(CreateProfile ))
 //rafcp
+
+
+
+
+
+
+
+
+/**
+* 
+*
+*  encapsulé dans un <Route> composant comme celui-ci:
+*  <Route path="/movies" component={MoviesIndex} />
+*  En faisant cela, le MoviesIndexcomposant a accès this.props.history 
+*  afin de pouvoir rediriger l'utilisateur avec this.props.history.push.
+*  Certains composants (généralement un composant d'en-tête) apparaissent sur chaque page 
+*   et ne sont donc pas entourés d'un <Route>:
+*   render() {
+*      return (<Header />);
+*     }
+*  Cela signifie que l'en-tête ne peut pas rediriger l'utilisateur.
+*  Pour contourner ce problème, le composant d'en-tête peut être encapsulé dans une withRouterfonction,
+ soit lors de son exportation:
+*
+* export default withRouter(Header)
+* Cela donne l' Headeraccès au composant this.props.history, ce qui signifie que l'en-tête peut maintenant rediriger l'utilisateur.
+* 
+* 
+* 
+*/

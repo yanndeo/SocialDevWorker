@@ -52,7 +52,7 @@ export const _getCurrentProfile = () => async dispatch => {
         console.log('data',formData)
 
         const res = await axios.post('/api/profile', formData, config);
-
+        
         dispatch({
             type: GET_PROFILE,
             payload: res.data
@@ -60,7 +60,8 @@ export const _getCurrentProfile = () => async dispatch => {
 
         dispatch( _setAlert( edit ? 'Profile Updated' :  'Profile Created' , 'success') );
 
-        if(!edit){
+        
+        if(!edit){  //creation
             history.push('/dashboard')
         }
 

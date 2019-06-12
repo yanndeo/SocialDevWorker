@@ -11,5 +11,5 @@ export default combineReducers({
     
     alert: alertReducer,
     auth: authReducer,
-    profile: profileReducer
+    profile_r: profileReducer
 });
